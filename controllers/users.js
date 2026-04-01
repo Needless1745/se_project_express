@@ -7,7 +7,7 @@ const getUsers = (req, res) => {
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res.status(ForbiddenError).send({ message: err.message });
     });
 };
 
@@ -16,16 +16,20 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
-    .orFail()
+    .orFail(() => {
+      const error = new Error("Item ID not found");
+      error.statusCode = NotFoundError;
+      throw error;
+    })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(NotFoundError).send({ message: err.message });
       } else if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BadRequestError).send({ message: err.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res.status(ForbiddenError).send({ message: err.message });
     });
 };
 
@@ -39,9 +43,9 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BadRequestError).send({ message: err.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res.status(ForbiddenError).send({ message: err.message });
     });
 };
 

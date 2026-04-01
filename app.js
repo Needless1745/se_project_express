@@ -12,8 +12,15 @@ mongoose
   })
   .catch(console.error);
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: "69ca99a069ca99a0f51664c19b930fbdf51664c19b930fbd",
+  };
+  next();
+});
+
 app.use(express.json());
-app.use("/", indexRouter);
+app.use(indexRouter);
 
 app.listen(PORT, () => {
   console.log(`This thing on? Port: ${PORT}`);
