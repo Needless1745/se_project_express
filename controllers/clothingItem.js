@@ -4,6 +4,7 @@ const {
   BAD_REQUEST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
   FORBIDDEN_REQUEST_CODE,
+  SERVER_ERROR_CODE,
 } = require("../utils/errors");
 
 // GETReturn all ClothingItems
@@ -32,10 +33,19 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "NotFoundError") {
-        return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user ID" });
       }
-      return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -58,10 +68,19 @@ const deleteItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user ID" });
       }
-      return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -79,10 +98,19 @@ const likeClothingItem = (req, res) => {
     .then((item) => res.status(OK_STATUS).send({ data: item }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user ID" });
       }
-      return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -100,10 +128,19 @@ const dislikeClothingItem = (req, res) => {
     .then((item) => res.status(OK_STATUS).send({ data: item }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user ID" });
       }
-      return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
