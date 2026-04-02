@@ -14,7 +14,9 @@ const getUsers = (req, res) => {
     .then((users) => res.status(OK_STATUS).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(SERVER_ERROR_CODE).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 

@@ -3,8 +3,8 @@ const {
   OK_STATUS,
   BAD_REQUEST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
-  FORBIDDEN_REQUEST_CODE,
   SERVER_ERROR_CODE,
+  FORBIDDEN_REQUEST_CODE,
 } = require("../utils/errors");
 
 // GETReturn all ClothingItems
@@ -48,11 +48,11 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndUpdate(itemId)
+  ClothingItem.findByIdAndDelete(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id) {
-        throw new FORBIDDEN_REQUEST_CODE();
+        res.status(FORBIDDEN_REQUEST_CODE).send({ message: "Forbidden" });
       }
       return item
         .deleteOne()
