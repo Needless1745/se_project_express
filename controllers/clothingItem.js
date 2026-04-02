@@ -33,15 +33,10 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid user ID" });
-      }
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+          .send({ message: "Invalid data passed" });
       }
       return res
         .status(SERVER_ERROR_CODE)
@@ -53,7 +48,6 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  // const userId = req.user._id;
   ClothingItem.findByIdAndUpdate(itemId)
     .orFail()
     .then((item) => {
