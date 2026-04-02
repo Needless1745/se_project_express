@@ -6,7 +6,7 @@ const {
   FORBIDDEN_REQUEST_CODE,
 } = require("../utils/errors");
 
-//GET- Return all ClothingItems
+// GETReturn all ClothingItems
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -19,7 +19,7 @@ const getItems = (req, res) => {
     });
 };
 
-//POST- Create new ClothingItem
+// POST Create new ClothingItem
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -34,20 +34,16 @@ const createItem = (req, res) => {
       console.error(err);
       if (err.name === "NotFoundError") {
         return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
-      } else if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
       }
       return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
     });
 };
 
-//DELETE Remove item by id
+// DELETE Remove item by id
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  const userId = req.user._id;
+  // const userId = req.user._id;
   ClothingItem.findByIdAndUpdate(itemId)
     .orFail()
     .then((item) => {
@@ -64,16 +60,12 @@ const deleteItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
       }
       return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
     });
 };
 
-// PUT- Like a clothing item
+// PUT Like a clothing item
 
 const likeClothingItem = (req, res) => {
   const { itemId } = req.params;
@@ -89,18 +81,14 @@ const likeClothingItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
       }
       return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
     });
 };
 
-// Delete- Removes like from clothing Item
+// Delete Removes like from clothing Item
 
-const dislikeClothingItem = (req, res, next) => {
+const dislikeClothingItem = (req, res) => {
   const { itemId } = req.params;
   const userId = req.user._id;
   ClothingItem.findByIdAndUpdate(
@@ -114,10 +102,6 @@ const dislikeClothingItem = (req, res, next) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
       }
       return res.status(FORBIDDEN_REQUEST_CODE).send({ message: err.message });
     });

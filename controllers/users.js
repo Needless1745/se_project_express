@@ -18,7 +18,7 @@ const getUsers = (req, res) => {
     });
 };
 
-//GET /byuserId
+// GET byuserId
 
 const getUser = (req, res) => {
   const { userId } = req.params;
@@ -33,10 +33,6 @@ const getUser = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
       }
       return res.status(NOT_FOUND_ERROR_CODE).send({ message: err.message });
     });
