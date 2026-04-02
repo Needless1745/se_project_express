@@ -14,7 +14,7 @@ mongoose
 
 app.use((req, res, next) => {
   req.user = {
-    _id: "69ca99a069ca99a0f51664c19b930fbdf51664c19b930fbd",
+    _id: "69ca99a0f51664c19b930fbd",
   };
   next();
 });
