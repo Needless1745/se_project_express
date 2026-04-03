@@ -14,9 +14,7 @@ const getItems = (req, res) => {
     .then((items) => res.status(OK_STATUS).send(items))
     .catch((err) => {
       console.error(err);
-      res
-        .status(BAD_REQUEST_ERROR_CODE)
-        .send({ message: "Error from getItems", err });
+      res.status(SERVER_ERROR_CODE).send({ message: "Error from getItems" });
     });
 };
 
@@ -36,7 +34,7 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data passed" });
+          .send({ message: "Invalid data" });
       }
       return res
         .status(SERVER_ERROR_CODE)
@@ -65,7 +63,7 @@ const deleteItem = (req, res) => {
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid user ID" });
+          .send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
@@ -95,7 +93,7 @@ const likeClothingItem = (req, res) => {
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid user ID" });
+          .send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
@@ -125,7 +123,7 @@ const dislikeClothingItem = (req, res) => {
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid user ID" });
+          .send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
