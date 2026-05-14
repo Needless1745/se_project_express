@@ -11,11 +11,11 @@ This repository contains the back end server for WTWR (What To Wear?), a weather
 
 ## Technologies Used
 
-Node.js-Runtime environment
-Express.js-Server framework
-MongoDB NoSQL-database
-Mongoose ODM for schema + validation
-GitHub Actions-CI testing pipeline
+-Node.js-Runtime environment
+-Express.js-Server framework
+-MongoDB NoSQL-database
+-Mongoose ODM for schema + validation
+-GitHub Actions-CI testing pipeline
 
 ## API Endpoints
 
