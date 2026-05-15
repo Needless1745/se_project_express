@@ -12,51 +12,35 @@ const {
   CONFLICT_ERROR_CODE,
   UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
-
-// GET /users
-
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(OK_STATUS).send(users))
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
+const user = require("../models/user");
 
 // GET byuserId
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
-    .orFail(() => {
-      const error = new Error("User not found");
-      error.name = "DocumentNotFoundError";
-      throw error;
-    })
-    .then((user) => res.status(OK_STATUS).send(user))
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .orFail()
+    .then((foundUser) => res.status(OK_STATUS).send(foundUser))
     .catch((err) => {
-      console.error(err);
-      if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid user ID" });
-      }
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+          .send({ meesage: "USer not found" });
       }
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Email and password are required" });
+    return;
+  }
 
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -70,22 +54,6 @@ const login = (req, res) => {
       res
         .status(UNAUTHORIZED_ERROR_CODE)
         .send({ message: "Invalid email or password" });
-    });
-};
-
-const getCurrentUser = (req, res) => {
-  User.findById(req.user._id)
-    .orFail()
-    .then((user) => res.status(OK_STATUS).send(user))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
-      }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -108,8 +76,7 @@ const createUser = (req, res) => {
       res.status(CREATED_SUCCESS).send(userObj);
     })
     .catch((err) => {
-      console.log(err);
-      if (err.code === "11000") {
+      if (err.code === 11000) {
         return res
           .status(CONFLICT_ERROR_CODE)
           .send({ message: "A user with this email already exists." });
@@ -125,4 +92,29 @@ const createUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUser, login, getCurrentUser };
+//PATCH: Update Profile
+
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail()
+    .then((updateUser) => res.status(OK_STATUS).send(updateUser))
+    .catch((err) => {
+      console.log(err);
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid data" });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occured on the server." });
+    });
+};
+
+module.exports = { createUser, login, getCurrentUser, updateUser };
