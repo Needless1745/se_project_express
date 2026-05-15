@@ -12,6 +12,7 @@ const {
   CONFLICT_ERROR_CODE,
   UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
+
 const user = require("../models/user");
 
 // GET byuserId
@@ -42,7 +43,8 @@ const login = (req, res) => {
     return;
   }
 
-  User.findUserByCredentials(email, password)
+  user
+    .findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -51,9 +53,15 @@ const login = (req, res) => {
       res.status(OK_STATUS).send({ token });
     })
     .catch((err) => {
-      res
-        .status(UNAUTHORIZED_ERROR_CODE)
-        .send({ message: "Invalid email or password" });
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED_ERROR_CODE)
+          .send({ message: "Invalid email or password" });
+      }
+
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -92,18 +100,19 @@ const createUser = (req, res) => {
     });
 };
 
-//PATCH: Update Profile
+// PATCH: Update Profile
 
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
 
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, avatar },
-    { new: true, runValidators: true }
-  )
+  user
+    .findByIdAndUpdate(
+      req.user._id,
+      { name, avatar },
+      { new: true, runValidators: true }
+    )
     .orFail()
-    .then((updateUser) => res.status(OK_STATUS).send(updateUser))
+    .then((updatedUser) => res.status(OK_STATUS).send(updatedUser))
     .catch((err) => {
       console.log(err);
       if (err.name === "ValidationError") {
