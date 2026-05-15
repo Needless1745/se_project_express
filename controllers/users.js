@@ -45,7 +45,7 @@ const login = (req, res) => {
 
   user
     .findUserByCredentials(email, password)
-    .then((user) => {
+    .then((founduser) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
@@ -78,8 +78,8 @@ const createUser = (req, res) => {
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => {
-      const userObj = user.toObject();
+    .then((createdUser) => {
+      const userObj = createdUser.toObject();
       delete userObj.password;
       res.status(CREATED_SUCCESS).send(userObj);
     })
