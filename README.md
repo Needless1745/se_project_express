@@ -45,3 +45,9 @@ This repository contains the back end server for WTWR (What To Wear?), a weather
  Check out [this video](https://www.loom.com/share/9ccaa6cf0a504153b1966dadcca5b582), where I describe my 
  project and some challenges I faced while building it.
 
+
+ ## *FOR PRJECT REVIEW: GH testing/pull request keeps throwin error for the hard coded user id we needed for sprint 12. all other errors worked on but this one: 1. The user ID must be set as required in the `app.js` file. For example:
+req.user = {
+ _id: "5d8b8592978f8bd833ca8133"
+}; *
+
