@@ -1,4 +1,4 @@
-const ClothingItem = require("../models/clothingItem");
+const clothingItem = require("../models/clothingItem");
 const {
   OK_STATUS,
   BAD_REQUEST_ERROR_CODE,
@@ -7,10 +7,11 @@ const {
   FORBIDDEN_REQUEST_CODE,
 } = require("../utils/errors");
 
-// GETReturn all ClothingItems
+// GETReturn all clothingItems
 
 const getItems = (req, res) => {
-  ClothingItem.find({})
+  clothingItem
+    .find({})
     .then((items) => res.status(OK_STATUS).send(items))
     .catch((err) => {
       console.error(err);
@@ -18,13 +19,14 @@ const getItems = (req, res) => {
     });
 };
 
-// POST Create new ClothingItem
+// POST Create new clothingItem
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
-  ClothingItem.create({ name, weather, imageUrl, owner })
+  clothingItem
+    .create({ name, weather, imageUrl, owner })
     .then((item) => {
       console.log(item);
       res.send({ data: item });
@@ -46,17 +48,16 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndDelete(itemId)
+  clothingItem
+    .findById(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id) {
         res.status(FORBIDDEN_REQUEST_CODE).send({ message: "Forbidden" });
       }
-      return item
-        .deleteOne()
-        .then(() =>
-          res.status(OK_STATUS).send({ message: "Item deleted successfully!" })
-        );
+      return clothingItem
+        .findByIdAndDelete(id)
+        .then((deletedItem) => res.status(OK_STATUS).send({ deletedItem }));
     })
     .catch((err) => {
       console.error(err);
@@ -68,7 +69,7 @@ const deleteItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+          .send({ message: "Item not found" });
       }
       return res
         .status(SERVER_ERROR_CODE)
@@ -78,14 +79,11 @@ const deleteItem = (req, res) => {
 
 // PUT Like a clothing item
 
-const likeClothingItem = (req, res) => {
+const likeclothingItem = (req, res) => {
   const { itemId } = req.params;
   const userId = req.user._id;
-  ClothingItem.findByIdAndUpdate(
-    itemId,
-    { $addToSet: { likes: userId } },
-    { new: true }
-  )
+  clothingItem
+    .findByIdAndUpdate(itemId, { $addToSet: { likes: userId } }, { new: true })
     .orFail()
     .then((item) => res.status(OK_STATUS).send({ data: item }))
     .catch((err) => {
@@ -108,14 +106,11 @@ const likeClothingItem = (req, res) => {
 
 // Delete Removes like from clothing Item
 
-const dislikeClothingItem = (req, res) => {
+const dislikeclothingItem = (req, res) => {
   const { itemId } = req.params;
   const userId = req.user._id;
-  ClothingItem.findByIdAndUpdate(
-    itemId,
-    { $pull: { likes: userId } },
-    { new: true }
-  )
+  clothingItem
+    .findByIdAndUpdate(itemId, { $pull: { likes: userId } }, { new: true })
     .orFail()
     .then((item) => res.status(OK_STATUS).send({ data: item }))
     .catch((err) => {
@@ -140,6 +135,6 @@ module.exports = {
   createItem,
   getItems,
   deleteItem,
-  likeClothingItem,
-  dislikeClothingItem,
+  likeclothingItem,
+  dislikeclothingItem,
 };

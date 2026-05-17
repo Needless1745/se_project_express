@@ -120,6 +120,11 @@ const updateUser = (req, res) => {
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid data" });
       }
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
       return res
         .status(SERVER_ERROR_CODE)
         .send({ message: "An error has occured on the server." });
