@@ -42,6 +42,6 @@ This repository contains the back end server for WTWR (What To Wear?), a weather
 <img width="1920" height="1020" alt="Screenshot 2026-04-03 155638" src="https://github.com/user-attachments/assets/057e3dae-9560-498d-a348-44a8c021cff4" />
  ## Project Pitch Video
  
- Check out [this video]([ADD_LINK_HERE](https://www.loom.com/share/9ccaa6cf0a504153b1966dadcca5b582)), where I describe my 
+ Check out [this video](https://www.loom.com/share/9ccaa6cf0a504153b1966dadcca5b582), where I describe my 
  project and some challenges I faced while building it.
 
