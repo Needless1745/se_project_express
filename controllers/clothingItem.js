@@ -56,7 +56,7 @@ const deleteItem = (req, res) => {
         res.status(FORBIDDEN_REQUEST_CODE).send({ message: "Forbidden" });
       }
       return clothingItem
-        .findByIdAndDelete(id)
+        .findByIdAndDelete(itemId)
         .then((deletedItem) => res.status(OK_STATUS).send({ deletedItem }));
     })
     .catch((err) => {
