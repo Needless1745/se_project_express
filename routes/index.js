@@ -14,4 +14,7 @@ router.use((req, res) => {
     .send({ message: "Requested resource not found" });
 });
 
+app.post("/signin", login);
+app.post("/signup", createUser);
+
 module.exports = router;

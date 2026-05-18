@@ -22,6 +22,7 @@ const getCurrentUser = (req, res) => {
     .orFail()
     .then((foundUser) => res.status(OK_STATUS).send(foundUser))
     .catch((err) => {
+      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND_ERROR_CODE)
@@ -53,6 +54,7 @@ const login = (req, res) => {
       res.status(OK_STATUS).send({ token });
     })
     .catch((err) => {
+      console.error(err);
       if (err.message === "Incorrect email or password") {
         return res
           .status(UNAUTHORIZED_ERROR_CODE)
@@ -84,6 +86,8 @@ const createUser = (req, res) => {
       res.status(CREATED_SUCCESS).send(userObj);
     })
     .catch((err) => {
+      console.error(err);
+
       if (err.code === 11000) {
         return res
           .status(CONFLICT_ERROR_CODE)
@@ -114,7 +118,8 @@ const updateUser = (req, res) => {
     .orFail()
     .then((updatedUser) => res.status(OK_STATUS).send(updatedUser))
     .catch((err) => {
-      console.log(err);
+      console.error(err);
+
       if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)

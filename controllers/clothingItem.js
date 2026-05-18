@@ -5,6 +5,7 @@ const {
   NOT_FOUND_ERROR_CODE,
   SERVER_ERROR_CODE,
   FORBIDDEN_REQUEST_CODE,
+  CREATED_SUCCESS,
 } = require("../utils/errors");
 
 // GETReturn all clothingItems
@@ -29,7 +30,7 @@ const createItem = (req, res) => {
     .create({ name, weather, imageUrl, owner })
     .then((item) => {
       console.log(item);
-      res.send({ data: item });
+      res.send(CREATED_SUCCESS);
     })
     .catch((err) => {
       console.error(err);
