@@ -3,6 +3,8 @@ const router = require("express").Router();
 const userRouter = require("./users");
 const itemRouter = require("./clothingItem");
 
+const { createUser, login } = require("../controllers/users");
+
 const { NOT_FOUND_ERROR_CODE } = require("../utils/errors");
 
 router.use("/users", userRouter);
@@ -14,7 +16,7 @@ router.use((req, res) => {
     .send({ message: "Requested resource not found" });
 });
 
-app.post("/signin", login);
-app.post("/signup", createUser);
+router.use("/signin", login);
+router.use("/signup", createUser);
 
 module.exports = router;
