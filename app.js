@@ -7,7 +7,7 @@ const app = express();
 const { PORT = 3001 } = process.env;
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db").catch((error) => {
-  console.log(error);
+  console.error(error);
 });
 
 app.use(express.json());

@@ -30,7 +30,7 @@ const createItem = (req, res) => {
     .create({ name, weather, imageUrl, owner })
     .then((item) => {
       console.log(item);
-      res.send(CREATED_SUCCESS);
+      res.status(CREATED_SUCCESS).send({ data: item });
     })
     .catch((err) => {
       console.error(err);
