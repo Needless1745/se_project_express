@@ -1,14 +1,15 @@
 const clothingItem = require("../models/clothingItem");
+const BadRequestError = require("../utils/BadRequestError");
+const NotFoundError = require("../utils/NotFoundError");
+const ForbiddenError = require("../utils/ForbiddenError");
+
 const {
   OK_STATUS,
-  BAD_REQUEST_ERROR_CODE,
-  NOT_FOUND_ERROR_CODE,
   SERVER_ERROR_CODE,
-  FORBIDDEN_REQUEST_CODE,
   CREATED_SUCCESS,
 } = require("../utils/errors");
 
-// GETReturn all clothingItems
+// GET Return all clothingItems
 
 const getItems = (req, res) => {
   clothingItem
@@ -35,13 +36,9 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
@@ -54,9 +51,7 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id) {
-        return res
-          .status(FORBIDDEN_REQUEST_CODE)
-          .send({ message: "Forbidden" });
+        return next(new ForbiddenError("Forbidden"));
       }
       return clothingItem
         .findByIdAndDelete(itemId)
@@ -65,18 +60,12 @@ const deleteItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid item ID"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "Item not found" });
+        return next(new NotFoundError("Item not Found"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
@@ -92,22 +81,16 @@ const likeclothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid item ID"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+        return next(new NotFoundError("Item not found"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
-// Delete Removes like from clothing Item
+// DELETE Removes like from clothing Item
 
 const dislikeclothingItem = (req, res) => {
   const { itemId } = req.params;
@@ -119,18 +102,12 @@ const dislikeclothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid item ID"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+        return next(new NotFoundError("Item not found"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 

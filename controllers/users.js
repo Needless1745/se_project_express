@@ -1,16 +1,17 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
+const BadRequestError = require("../utils/BadRequestError");
+const NotFoundError = require("../utils/NotFoundError");
+const ForbiddenError = require("../utils/ForbiddenError");
+const UnauthorizedError = require("../utils/UnauthorizedError");
+const ConflictError = require("../utils/ConflictError");
 
 const User = require("../models/user");
 const {
   OK_STATUS,
-  BAD_REQUEST_ERROR_CODE,
-  NOT_FOUND_ERROR_CODE,
   CREATED_SUCCESS,
   SERVER_ERROR_CODE,
-  CONFLICT_ERROR_CODE,
-  UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
 
 const user = require("../models/user");
@@ -24,13 +25,9 @@ const getCurrentUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ meesage: "USer not found" });
+        return next(new NotFoundError("User not found."));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
@@ -38,13 +35,10 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res
-      .status(BAD_REQUEST_ERROR_CODE)
-      .send({ message: "Email and password are required" });
-    return;
+    return next(new BadRequestError("Email and password are required"));
   }
 
-  user
+  return user
     .findUserByCredentials(email, password)
     .then((foundUser) => {
       const token = jwt.sign({ _id: foundUser._id }, JWT_SECRET, {
@@ -56,14 +50,10 @@ const login = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.message === "Incorrect email or password") {
-        return res
-          .status(UNAUTHORIZED_ERROR_CODE)
-          .send({ message: "Invalid email or password" });
+        return next(new UnauthorizedError("Incorrect email or password."));
       }
 
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
@@ -89,18 +79,14 @@ const createUser = (req, res) => {
       console.error(err);
 
       if (err.code === 11000) {
-        return res
-          .status(CONFLICT_ERROR_CODE)
-          .send({ message: "A user with this email already exists." });
+        return next(
+          new ConflictError("A user with this email exists already.")
+        );
       }
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
@@ -121,18 +107,12 @@ const updateUser = (req, res) => {
       console.error(err);
 
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
+        return next(new NotFoundError("User not Found"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occured on the server." });
+      return next(err);
     });
 };
 
