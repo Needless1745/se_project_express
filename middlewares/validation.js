@@ -10,7 +10,7 @@ const validateURL = (value, helpers) => {
 
 const validateCreateItem = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required.min(2).max(30).messages({
+    name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The min length of the "name" field is 2',
       "string.max": 'The max length of the "name" field is 30',
       "string.empty": 'The "name" field must be filled in',
@@ -24,20 +24,20 @@ const validateCreateItem = celebrate({
 
 const validateUserCreate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required.min(2).max(30).messages({
+    name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The min length of the "name" field is 2',
       "string.max": 'The max length of the "name" field is 30',
       "string.empty": 'The "name" field must be filled in',
     }),
-    email: Joi.string().required.email().messages({
+    email: Joi.string().required().email().messages({
       "string.empty": 'The "email" fiel msut be filled in',
       "string.email": "The email must be a valid email",
     }),
-    avatar: Joi.string().required.custom(validateURL).messages({
+    avatar: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "name" field must be filled in',
       "string.uri": 'The "imageUrl" field must be a valid url',
     }),
-    password: Joi.string().required.messages({
+    password: Joi.string().required().messages({
       "string.empty": 'The "name" field must be filled in',
     }),
   }),
