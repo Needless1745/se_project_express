@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 const BadRequestError = require("../utils/BadRequestError");
 const NotFoundError = require("../utils/NotFoundError");
-const ForbiddenError = require("../utils/ForbiddenError");
+// const ForbiddenError = require("../utils/ForbiddenError");//
 const UnauthorizedError = require("../utils/UnauthorizedError");
 const ConflictError = require("../utils/ConflictError");
 
@@ -11,14 +11,14 @@ const User = require("../models/user");
 const {
   OK_STATUS,
   CREATED_SUCCESS,
-  SERVER_ERROR_CODE,
+  // SERVER_ERROR_CODE//,
 } = require("../utils/errors");
 
 const user = require("../models/user");
 
 // GET byuserId
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((foundUser) => res.status(OK_STATUS).send(foundUser))
@@ -31,7 +31,7 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -59,11 +59,11 @@ const login = (req, res) => {
 
 // POST create user
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   if (!password) {
-    res.status(BAD_REQUEST_ERROR_CODE).send({ message: "Invalid data" });
+    res.status(BadRequestError).send({ message: "Invalid data" });
     return;
   }
 
@@ -92,7 +92,7 @@ const createUser = (req, res) => {
 
 // PATCH: Update Profile
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
 
   user

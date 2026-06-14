@@ -11,7 +11,7 @@ const {
 
 // GET Return all clothingItems
 
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   clothingItem
     .find({})
     .then((items) => res.status(OK_STATUS).send(items))
@@ -23,7 +23,7 @@ const getItems = (req, res) => {
 
 // POST Create new clothingItem
 
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
@@ -44,7 +44,7 @@ const createItem = (req, res) => {
 
 // DELETE Remove item by id
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
   clothingItem
     .findById(itemId)
@@ -71,7 +71,7 @@ const deleteItem = (req, res) => {
 
 // PUT Like a clothing item
 
-const likeclothingItem = (req, res) => {
+const likeclothingItem = (req, res, next) => {
   const { itemId } = req.params;
   const userId = req.user._id;
   clothingItem
@@ -92,7 +92,7 @@ const likeclothingItem = (req, res) => {
 
 // DELETE Removes like from clothing Item
 
-const dislikeclothingItem = (req, res) => {
+const dislikeclothingItem = (req, res, next) => {
   const { itemId } = req.params;
   const userId = req.user._id;
   clothingItem
