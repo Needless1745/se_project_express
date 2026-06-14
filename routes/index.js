@@ -8,12 +8,12 @@ const { createUser, login } = require("../controllers/users");
 const { NOT_FOUND_ERROR_CODE } = require("../utils/errors");
 
 const {
-  validateCreateUser,
-  validateLogin,
+  validateUserCreate,
+  validateUserLogin,
 } = require("../middlewares/validation");
 
-router.use("/signin", validateLogin, login);
-router.use("/signup", validateCreateUser, createUser);
+router.use("/signin", validateUserLogin, login);
+router.use("/signup", validateUserCreate, createUser);
 
 router.use("/users", userRouter);
 router.use("/items", itemRouter);
