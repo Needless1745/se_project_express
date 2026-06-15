@@ -45,4 +45,13 @@ This repository contains the back end server for WTWR (What To Wear?), a weather
  Check out [this video](https://www.loom.com/share/9ccaa6cf0a504153b1966dadcca5b582), where I describe my 
  project and some challenges I faced while building it.
 
+## Domain:
+seproj1.crabdance.com
+
+## Backend Server:
+
+spi.seproj1.crabdance.com
+
+## Frontend Repo:
+https://github.com/Needless1745/se_project_react
 
