@@ -3,11 +3,7 @@ const BadRequestError = require("../utils/BadRequestError");
 const NotFoundError = require("../utils/NotFoundError");
 const ForbiddenError = require("../utils/ForbiddenError");
 
-const {
-  OK_STATUS,
-  SERVER_ERROR_CODE,
-  CREATED_SUCCESS,
-} = require("../utils/errors");
+const { OK_STATUS, CREATED_SUCCESS } = require("../utils/errors");
 
 // GET Return all clothingItems
 
@@ -17,7 +13,7 @@ const getItems = (req, res, next) => {
     .then((items) => res.status(OK_STATUS).send(items))
     .catch((err) => {
       console.error(err);
-      res.status(SERVER_ERROR_CODE).send({ message: "Error from getItems" });
+      return next(err);
     });
 };
 

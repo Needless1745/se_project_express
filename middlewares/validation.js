@@ -19,6 +19,7 @@ const validateCreateItem = celebrate({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'The "imageUrl" field must be a valid url',
     }),
+    weather: Joi.string().valid("hot", "warm", "cold").required(),
   }),
 });
 
@@ -63,19 +64,10 @@ const validateId = celebrate({
     }),
   }),
 });
-const validateUserId = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().hex().length(24).messages({
-      "string.hex": "The itemId must be a hexadecimal value",
-      "string.length": "The itemId must be 24 characters long",
-    }),
-  }),
-});
 
 module.exports = {
   validateCreateItem,
   validateUserCreate,
   validateUserLogin,
   validateId,
-  validateUserId,
 };
